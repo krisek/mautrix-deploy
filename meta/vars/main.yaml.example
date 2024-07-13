@@ -1,0 +1,10 @@
+matrix_domain: matrix.example.com
+admin_user: admin
+appservice_host_or_ip: 10.0.0.2
+appservice_port: 29319
+# set secure as_token
+as_token: 
+# set secure hs_token
+hs_token: 
+# set storage class that is available on your cluster
+storage_class_name: 

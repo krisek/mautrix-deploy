@@ -1,0 +1,27 @@
+- name: Install meta mautrix bridge
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+      - vars/main.yaml
+  tasks:
+    - name: Generate config file
+      template:
+        src: config.yaml
+        dest: /tmp/mautrix--meta-config.yaml
+
+    - name: Generate k8s manifests
+      template:
+        src: k8s.yaml
+        dest: /tmp/mautrix--meta-k8s.yaml
+    
+    - name: Generate app service definition
+      template:
+        src: meta_app_service.yaml
+        dest: /tmp/mautrix--meta_app_service.yaml
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/instance: mautrix-meta
+    app.kubernetes.io/name: mautrix-meta
+  name: mautrix-meta
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: {{ storage_class_name }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mautrix-meta
+spec:
+  serviceName: mautrix-meta
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mautrix-meta
+  template:
+    metadata:
+      labels:
+        app: mautrix-meta
+    spec:
+      containers:
+        - name: mautrix-meta
+          image: dock.mau.dev/mautrix/meta:latest
+          command: ["/bin/sh", "-c"]
+          args: ["exec mautrix-meta --no-update --config /data/config.yaml --registration /storage/registration"]
+          ports:
+            - containerPort: {{appservice_port | default(29319)}}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /data/config.yaml
+              subPath: config.yaml
+            - name: storage-volume
+              mountPath: /storage
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mautrix-meta
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: mautrix-meta
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mautrix-meta
+  labels:
+    app: mautrix-meta
+spec:
+  type: NodePort
+  publishNotReadyAddresses: true
+  ports:
+    - port: {{appservice_port | default(29319)}}
+      targetPort: {{appservice_port| default(29319)}}
+      nodePort: 30019  # You can specify a port within the range 30000-32767 or let Kubernetes assign one automatically by omitting this line
+  selector:
+    app: mautrix-meta
+

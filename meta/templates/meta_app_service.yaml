@@ -1,0 +1,21 @@
+id: mautrix-meta
+url: http://{{appservice_host_or_ip | default('localhost')}}:{{ appservice_port | default(29319) }}
+as_token: {{ as_token }}
+hs_token: {{ hs_token }}
+sender_localpart: mautrix-meta
+namespaces:
+  users:
+    - regex: '@mautrix-meta.*:{{ matrix_domain }}'
+      exclusive: true
+    - regex: '@_meta_.*:{{ matrix_domain }}'
+      exclusive: true
+  aliases:
+    - regex: '#_meta_.*:{{ matrix_domain }}'
+      exclusive: true
+  rooms: []
+rate_limited: false
+protocols: []
+de.sorunome.msc2409.push_ephemeral:
+  - type: m.room.message
+    users:
+      - '@_meta_.*:{{ matrix_domain }}'
