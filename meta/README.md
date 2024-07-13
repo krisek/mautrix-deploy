@@ -101,7 +101,7 @@ Register the new app service on your Matrix server using `/tmp/mautrix--meta_app
 
 ## Network Connectivity
 
-I defined the app service and NodePort as I'm running it on a very simple, minimal, single node kubernetes "cluster".  In my case the matrix server is running on a VM and the Kubernetes server with the bridge service on it on a separate VM, both connected with ZeroTier. Your mileage might vary.
+I defined the app service as NodePort as I'm running it on a very simple, minimal, single node kubernetes "cluster".  In my case the matrix server is running on a VM and the Kubernetes server with the bridge service on it on a separate VM, both connected with ZeroTier. I specified `localhost` as default application service host. I hardly believe this would work at all, maybe I should have assumed that the matrix server is running on the same k8s cluster and it could use the cluster internal service DNS... 🤔 Whatever... your mileage might vary.
 
 
 
